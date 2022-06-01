@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Должности</title>
+{% endblock %}
+
+{% block content %}
+    {% if positions %}
+        {% for position in positions %}
+            <p>Наименование должности: {{position}}</p>
+        {% endfor %}
+    {% else %}
+        <p>Должностей еще нет в бд</p>
+    {% endif %}
+{% endblock %}

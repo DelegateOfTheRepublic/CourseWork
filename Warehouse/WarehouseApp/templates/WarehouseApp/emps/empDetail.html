@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Сотрудник</title>
+{% endblock %}
+
+{% block content %}
+    {% for field in emp.get_model_fields %}
+        {% if field.name != 'id' %}
+            <p>{{emp|get_verb_name:field}}: {{emp|get_attribute:field}}</p>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

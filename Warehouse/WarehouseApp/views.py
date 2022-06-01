@@ -1,10 +1,11 @@
 import json
 import os
+from django.db import models
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.template.defaulttags import register
 
-from WarehouseApp.models import Goods, Section, SectionType, SupGood, Supplier, Supply, Unit
+from WarehouseApp.models import *
 
 # Create your views here.
 
@@ -34,7 +35,7 @@ def sectionDetail(request, section_id):
         raise Http404('Данной секции не существует')
     return render(request, 'WarehouseApp/sections/sectionDetail.html', {'goods':goods})
 
-def goods(request, section_id):
+def goods(request):
     goods = Goods.objects.all()
     return render(request, 'WarehouseApp/goods/goods.html', {'goods':goods})
 
@@ -116,7 +117,10 @@ def delSupply(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def supplyDetail(request, supply_id):
-    supply = Supply.objects.get(id = supply_id)
+    try:
+        supply = Supply.objects.get(id = supply_id)
+    except:
+        return Http404('Такой поставки нет в базе данных')
     return render(request, 'WarehouseApp/supplies/supplyDetail.html', {'supply':supply})
 
 def addReport(request):
@@ -125,11 +129,16 @@ def addReport(request):
 def delReport(request):
     return HttpResponse('<h2>Asd</h2>')
 
-def reportDetail(request):
-    return HttpResponse('<h2>Asd</h2>')
+def reportDetail(request, report_id):
+    try:
+        report = Report.objects.get(id = report_id)
+    except:
+        return Http404('Такого отчета в базе данных нет')
+    return render(request, 'WarehouseApp/reports/reportDetail.html', {'report':report})
 
 def reports(request):
-    return HttpResponse('<h2>Asd</h2>')
+    reports = Report.objects.all()
+    return render(request, 'WarehouseApp/reports/reports.html', {'reports':reports})
 
 def loadingForm(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -138,25 +147,19 @@ def addLoading(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def loadings(request):
-    return HttpResponse('<h2>Asd</h2>')
+    loadings = Loading.objects.all()
+    return render(request, 'WarehouseApp/loadings/loadings.html', {'loadings':loadings})
 
-def loadingDetail(request):
-    return HttpResponse('<h2>Asd</h2>')
-
-def goodTypes(request):
-    return HttpResponse('<h2>Asd</h2>')
-
-def addGoodType(request):
-    return HttpResponse('<h2>Asd</h2>')
-
-def delGoodType(request):
-    return HttpResponse('<h2>Asd</h2>')
-
-def editGoodType(request):
-    return HttpResponse('<h2>Asd</h2>')
+def loadingDetail(request, loading_id):
+    try:
+        loading = Loading.objects.get(id = loading_id)
+    except:
+        return Http404('Данного документа нет в бд')
+    return render(request, 'WarehouseApp/loadings/loadingDetail.html', {'loading':loading})
 
 def cellStatus(request):
-    return HttpResponse('<h2>Asd</h2>')
+    cellStatus = CellStatus.objects.all()
+    return render(request, 'WarehouseApp/cellStatus/cellStatus.html', {'cellStatus':cellStatus})
 
 def addCellStatus(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -168,7 +171,8 @@ def editCellStatus(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def goodGroups(request):
-    return HttpResponse('<h2>Asd</h2>')
+    groups = GoodGroup.objects.all()
+    return render(request, 'WarehouseApp/goodGroups/goodGroups.html', {'groups':groups})
 
 def addGoodGroup(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -180,7 +184,8 @@ def editGoodGroup(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def positions(request):
-    return HttpResponse('<h2>Asd</h2>')
+    positions = Position.objects.all()
+    return render(request, 'WarehouseApp/positions/positions.html', {'positions':positions})
 
 def addPosition(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -192,7 +197,8 @@ def editPosition(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def categories(request):
-    return HttpResponse('<h2>Asd</h2>')
+    categories = Category.objects.all()
+    return render(request, 'WarehouseApp/categories/categories.html', {'categories':categories})
 
 def addCategory(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -204,7 +210,8 @@ def editCategory(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def subcategories(request):
-    return HttpResponse('<h2>Asd</h2>')
+    subcategories = Subcategory.objects.all()
+    return render(request, 'WarehouseApp/subcategories/subcategories.html', {'subcategories':subcategories})
 
 def addSubcategory(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -216,7 +223,15 @@ def editSubcategory(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def emps(request):
-    return HttpResponse('<h2>Asd</h2>')
+    emps = Emp.objects.all()
+    return render(request, 'WarehouseApp/emps/emps.html', {'emps':emps})
+
+def empDetail(request, emp_id):
+    try:
+        emp = Emp.objects.get(id = emp_id)
+    except:
+        return Http404('Данного сотрудника нет в бд')
+    return render(request, 'WarehouseApp/emps/empDetail.html', {'emp':emp})
 
 def addEmp(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -237,7 +252,15 @@ def editGood(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def receipts(request):
-    return HttpResponse('<h2>Asd</h2>')
+    receipts = Receipts.objects.all()
+    return render(request, 'WarehouseApp/receipts/receipts.html', {'receipts':receipts})
+
+def receiptDetail(request, receipt_id):
+    try:
+        receipt = Receipts.objects.get(id = receipt_id)
+    except:
+        return Http404('Данной накладной нет в бд')
+    return render(request, 'WarehouseApp/receipts/receiptDetail.html', {'receipt':receipt})
 
 def addReceip(request):
     return HttpResponse('<h2>Asd</h2>')
@@ -249,7 +272,15 @@ def editReceip(request):
     return HttpResponse('<h2>Asd</h2>')
 
 def expenditures(request):
-    return HttpResponse('<h2>Asd</h2>')
+    expenditures = Expenditure.objects.all()
+    return render(request, 'WarehouseApp/expenditures/expenditures.html', {'expenditures':expenditures})
+
+def expenditureDetail(request, expenditure_id):
+    try:
+        expenditure = Expenditure.objects.get(id = expenditure_id)
+    except:
+        return Http404('Данной накладной нет в бд')
+    return render(request, 'WarehouseApp/expenditures/expenditureDetail.html', {'expenditure':expenditure})
 
 def addExpenditure(request):
     return HttpResponse('<h2>Asd</h2>')

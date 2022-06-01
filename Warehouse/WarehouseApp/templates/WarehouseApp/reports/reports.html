@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Отчеты</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if reports %}
+        {% for report in reports %}
+            <a href="{% url 'reportDetail' report.id %}">{{report}}</a>
+        {% endfor %}
+    {% else %}
+        <p>Такого отчета в базе нет</p>
+    {% endif %}
+
+{% endblock %}

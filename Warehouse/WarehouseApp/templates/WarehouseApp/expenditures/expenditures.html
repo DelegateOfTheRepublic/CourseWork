@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Доверенность</title>
+{% endblock %}
+
+{% block content %}
+    {% if expenditures %}
+        {% for expenditure in expenditures %}
+            <a href="{% url 'expenditureDetail' expenditure.id %}">{{expenditure}}</a>
+        {% endfor %}
+    {% else %}
+        <p>Доверенностей еще нет в бд</p>
+    {% endif %}
+{% endblock %}

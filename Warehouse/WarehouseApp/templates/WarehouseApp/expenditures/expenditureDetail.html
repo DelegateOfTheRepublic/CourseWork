@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Доверенность</title>
+{% endblock %}
+
+{% block content %}
+    {% for field in expenditure.get_model_fields %}
+        {% if field.name != 'id' %}
+            {% if field.name == 'supplier' %}
+                <label for="">Поставщик: </label>
+                <a href="{% url 'supplierDetail' expenditure.supplier.id %}">{{expenditure.supplier}}</a>
+            {% elif field.name == 'exp_employee' %}
+                <label for="">Сотрудник: </label>
+                <a href="{% url 'empDetail' expenditure.exp_employee.id %}">{{expenditure.exp_employee}}</a>
+            {% elif field.name == 'receiver_company' %}
+                <p>{{expenditure|get_verb_name:field}}: {{expenditure|get_attribute:field}}</p>
+                {% for expenditure_string in expenditure.get_expenditure_strings %}
+                    {% for field in expenditure_string.get_model_fields %}
+                        {% if field.name != 'id' and field.name != 'expenditure'%}
+                            {% if field.name == 'good' %}
+                                <label for="">Товар: </label>
+                                <a href="{% url 'goodDetail' expenditure_string.good.place.section.id expenditure_string.good.id %}">{{expenditure_string.good}}</a>
+                            {% else %}
+                                <p>{{expenditure_string|get_verb_name:field}}: {{expenditure_string|get_attribute:field}}</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p>{{expenditure|get_verb_name:field}}: {{expenditure|get_attribute:field}}</p>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

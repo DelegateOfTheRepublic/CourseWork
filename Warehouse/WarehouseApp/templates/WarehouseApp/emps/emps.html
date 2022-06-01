@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Сотрудники</title>
+{% endblock %}
+
+{% block content %}
+    {% if emps %}
+        {% for emp in emps %}
+            <label for="">ФИО сотрудника: </label>
+            <a href="{% url 'empDetail' emp.id %}">{{emp}}</a>
+        {% endfor %}
+    {% else %}
+        <p>Сотрудников еще нет в бд</p>
+    {% endif %}
+{% endblock %}

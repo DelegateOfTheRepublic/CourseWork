@@ -97,6 +97,12 @@ class Emp(models.Model):
     password = models.CharField('Пароль', max_length=25)
     begin_date = models.DateTimeField('Дата приема на работу')
 
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
+
     def __str__(self):
         return '{0} {1} {2}'.format(self.last_name, self.first_name, self.middle_name)
 
@@ -191,6 +197,15 @@ class Receipts(models.Model):
     total_cost = models.DecimalField('Конечная цена', max_digits=9, decimal_places=5)
     rec_employee = models.ForeignKey(Emp, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Сотрудник')
 
+    def get_receipt_strings(self):
+        return ReceiptString.objects.filter(receipt = self.id)
+
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
+
     def __str__(self):
         return 'Receipts №{0}'.format(self.id)
 
@@ -198,6 +213,12 @@ class ReceiptString(models.Model):
     receipt = models.ForeignKey(Receipts, on_delete=models.CASCADE, verbose_name='Номер накладной')
     good = models.ForeignKey(SupGood, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Товар')
     amount = models.IntegerField('Количество товара')
+
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
 
     def __str__(self):
         return '{0}:ReceiptString №{1}'.format(self.receipt, self.id) 
@@ -209,6 +230,15 @@ class Expenditure(models.Model):
     total_cost = models.DecimalField('Конечная цена', max_digits=9, decimal_places=5)
     exp_employee = models.ForeignKey(Emp, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Сотрудник')
 
+    def get_expenditure_strings(self):
+        return ExpenditureString.objects.filter(expenditure = self.id)
+
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
+
     def __str__(self):
         return 'Expenditure №{0}'.format(self.id)
 
@@ -217,6 +247,12 @@ class ExpenditureString(models.Model):
     good = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Товар')
     amount = models.IntegerField('Количество товара')
 
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
+
     def __str__(self):
         return '{0}:ExpenditureString №{1}'.format(self.expenditure, self.id)
 
@@ -224,6 +260,12 @@ class Loading(models.Model):
     good = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True)
     amount = models.IntegerField('Отгружаемое количество')
     date = models.DateField('Дата отгрузки', auto_now_add=True)
+
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
 
     def __str__(self):
         return 'Loading №{0}'.format(self.id)
@@ -242,6 +284,15 @@ class Register(models.Model):
 class Report(models.Model):
     date = models.DateTimeField('Дата формирования отчета', auto_now_add=True)
 
+    def get_report_strings(self):
+        return ReportString.objects.filter(report = self.id)
+
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
+
     def __str__(self):
         return 'Report №{0}'.format(self.id)
 
@@ -251,6 +302,12 @@ class ReportString(models.Model):
     receipts = models.ForeignKey(Receipts, on_delete=models.SET_NULL, null=True, verbose_name='Накладная')
     loading = models.ForeignKey(Loading, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Отгрузка')
     closing_good_balance = models.IntegerField('Конечный остаток товара')
+
+    def get_verbose_name(self, field_name):
+        return self._meta.get_field(field_name).verbose_name
+
+    def get_model_fields(self):
+        return self._meta.fields
 
     def __str__(self):
         return '{0}:ReportString №{1}'.format(self.report, self.id)

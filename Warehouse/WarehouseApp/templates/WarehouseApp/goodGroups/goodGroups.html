@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Товарные группы</title>
+{% endblock %}
+
+{% block content %}
+    {% if groups %}
+        {% for group in groups %}
+            <p>Наименование товарной группы: {{group}}</p>
+        {% endfor %}
+    {% else %}
+        <p>Товарных групп еще нет в бд</p>
+    {% endif %}
+{% endblock %}

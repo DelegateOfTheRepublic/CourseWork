@@ -42,11 +42,6 @@ urlpatterns = [
     path('sectionTypes/delSectionType/', views.delSectionType, name='delSectionType'),
     path('sectionTypes/editSectionType/', views.editSectionType, name='editSectionType'),
 
-    path('goodTypes/', views.goodTypes, name='goodTypes'),
-    path('goodTypes/addGoodType/', views.addGoodType, name='addGoodType'),
-    path('goodTypes/delGoodType/', views.delGoodType, name='delGoodType'),
-    path('goodTypes/editGoodType/', views.editGoodType, name='editGoodType'),
-
     path('cellStatus/', views.cellStatus, name='cellStatus'),
     path('cellStatus/addCellStatus/', views.addCellStatus, name='addCellStatus'),
     path('cellStatus/delCellStatus/', views.delCellStatus, name='delCellStatus'),
@@ -73,6 +68,7 @@ urlpatterns = [
     path('subcategories/editSubcategory/', views.editSubcategory, name='editSubcategory'),
 
     path('emps/', views.emps, name='emps'),
+    path('emps/emp_<int:emp_id>/', views.empDetail, name='empDetail'),
     path('emps/addEmp/', views.addEmp, name='addEmp'),
     path('emps/delEmp/', views.delEmp, name='delEmp'),
     path('emps/editEmp/', views.editEmp, name='editEmp'),
@@ -83,11 +79,13 @@ urlpatterns = [
     path('goods/editGood/', views.editGood, name='editGood'),
 
     path('receipts/', views.receipts, name='receipts'),
+    path('receipts/receipt_<int:receipt_id>/', views.receiptDetail, name='receiptDetail'),
     path('receipts/addReceip/', views.addReceip, name='addReceip'),
     path('receipts/delReceip/', views.delReceip, name='delReceip'),
     path('receipts/editReceip/', views.editReceip, name='editReceip'),
 
     path('expenditures/', views.expenditures, name='expenditures'),
+    path('expenditures/expenditure_<int:expenditure_id>/', views.expenditureDetail, name='expenditureDetail'),
     path('expenditures/addExpenditure/', views.addExpenditure, name='addExpenditure'),
     path('expenditures/delExpenditure/', views.delExpenditure, name='delExpenditure'),
     path('expenditures/editExpenditure/', views.editExpenditure, name='editExpenditure'),

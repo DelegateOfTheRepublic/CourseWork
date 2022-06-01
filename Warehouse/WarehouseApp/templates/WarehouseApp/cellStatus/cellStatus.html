@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Статусы ячеек</title>
+{% endblock %}
+
+{% block content %}
+    {% if cellStatus %}
+        {% for status in cellStatus %}
+            <p>Статус ячейки: {{status}}</p>
+        {% endfor %}
+    {% else %}
+        <p>Статусов ячеек еще нет в бд</p>
+    {% endif %}
+{% endblock %}

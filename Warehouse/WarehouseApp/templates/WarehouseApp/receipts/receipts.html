@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Накладные</title>
+{% endblock %}
+
+{% block content %}
+    {% if receipts %}
+        {% for receipt in receipts %}
+            <a href="{% url 'receiptDetail' receipt.id %}">{{receipt}}</a>
+        {% endfor %}
+    {% else %}
+        <p>Накладной еще нет в бд</p>
+    {% endif %}
+{% endblock %}

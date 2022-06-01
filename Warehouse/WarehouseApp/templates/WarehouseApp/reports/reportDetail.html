@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{report}}</title>
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        <p>{{report}}</p>
+        {% for field in report.get_model_fields %}
+            {% if field.name != 'id' %}
+                <p>{{report|get_verb_name:field}}: {{report.date}}</p>
+            {% endif %}
+        {% endfor %}
+        {% for report_string in report.get_report_strings %}
+            <div>
+            {% for field in report_string.get_model_fields %}
+                {% if field.name != 'id' %}
+                    <p>{{report_string|get_verb_name:field}}: {{report_string|get_attribute:field}}</p>
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

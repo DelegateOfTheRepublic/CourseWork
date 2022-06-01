@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{loading}}</title>
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        <p>{{loading}}</p>
+        {% for field in loading.get_model_fields %}
+            <div>
+                {% if field.name != 'id' %}
+                    {% if field.name == 'good' %}
+                        <a href="{% url 'goodDetail' loading.good.place.section.id loading.good.id %}">{{loading.good.name}}</a>
+                    {% else %}
+                        <p>{{loading|get_verb_name:field}}: {{loading|get_attribute:field}}</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

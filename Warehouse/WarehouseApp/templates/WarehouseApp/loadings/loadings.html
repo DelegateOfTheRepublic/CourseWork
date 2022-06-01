@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Отгрузки</title>
+{% endblock %}
+
+{% block content %}
+    {% if loadings %}
+        {% for loading in loadings %}
+            <a href="{% url 'loadingDetail' loading.id %}">{{loading}}</a>
+        {% endfor %}
+    {% else %}
+        <p>В базе данных документов о отгрузок пока нет</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Подкатегории товаров</title>
+{% endblock %}
+
+{% block content %}
+    {% if subcategories %}
+        {% for subcategory in subcategories %}
+            <p>Наименование подкатегории: {{subcategory}}</p>
+        {% endfor %}
+    {% else %}
+        <p>Подкатегорий еще нет в бд</p>
+    {% endif %}
+{% endblock %}

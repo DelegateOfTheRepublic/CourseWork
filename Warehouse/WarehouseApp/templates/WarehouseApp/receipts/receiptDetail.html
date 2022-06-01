@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Накладная</title>
+{% endblock %}
+
+{% block content %}
+    {% for field in receipt.get_model_fields %}
+        {% if field.name != 'id' %}
+            {% if field.name == 'supplier' %}
+                <label for="">Поставщик: </label>
+                <a href="{% url 'supplierDetail' receipt.supplier.id %}">{{receipt.supplier}}</a>
+            {% elif field.name == 'rec_employee' %}
+                <label for="">Сотрудник: </label>
+                <a href="{% url 'empDetail' receipt.rec_employee.id %}">{{receipt.rec_employee}}</a>
+            {% elif field.name == 'receiver_company' %}
+                <p>{{receipt|get_verb_name:field}}: {{receipt|get_attribute:field}}</p>
+                {% for receipt_string in receipt.get_receipt_strings %}
+                    {% for field in receipt_string.get_model_fields %}
+                        {% if field.name != 'id' and field.name != 'receipt' %}
+                            {% if field.name == 'good' %}
+                                <label for="">Товар: </label>
+                                <a href="{% url 'supplyGoodDetail' receipt_string.good.supllier.id receipt_string.good.id %}">{{receipt_string.good}}</a>
+                            {% else %}
+                                <p>{{receipt_string|get_verb_name:field}}: {{receipt_string|get_attribute:field}}</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p>{{receipt|get_verb_name:field}}: {{receipt|get_attribute:field}}</p>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
