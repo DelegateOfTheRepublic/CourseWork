@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Поставщики</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if suppliers %}
+        {% for supplier in suppliers %}
+            <a href="{% url 'supplierDetail' supplier.id %}">{{supplier}}</a>
+        {% endfor %}
+    {% else %}
+        <p>Такого поставщика в базе нет</p>
+    {% endif %}
+
+{% endblock %}

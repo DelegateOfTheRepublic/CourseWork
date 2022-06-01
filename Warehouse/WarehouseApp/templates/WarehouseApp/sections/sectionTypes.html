@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Типы секций</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if sectionTypes %}
+        {% for sectionType in sectionTypes %}
+            <p>{{sectionType}}</p>
+        {% endfor %}
+    {% else %}
+        <p>Типов секции в базе нет</p>
+    {% endif %}
+
+{% endblock %}

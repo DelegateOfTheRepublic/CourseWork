@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Поставки</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if supplies %}
+        {% for supply in supplies %}
+            <a href="{% url 'supplyDetail' supply.id %}">{{supply}}</a>
+        {% endfor %}
+    {% else %}
+        <p>Поставок в базе нет</p>
+    {% endif %}
+
+{% endblock %}

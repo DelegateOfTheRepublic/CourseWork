@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{good}}</title>
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        <p>{{good.name}}</p>
+        <a href="{% url 'supplierDetail' good.supplier.id %}">{{good.supplier}}</a>
+        <img src="{{good.icon.url}}" alt="">
+        {% for key in good_specs.keys %}
+            <p>{{good_specs|get_item:key}}</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if sections %}
+        {% for section in sections %}
+            <a href="{% url 'sectionDetail' section.id %}">{{section.name}}</a>
+        {% endfor %}
+    {% else %}
+        <h3>Секций в базе нет</h3>
+    {% endif %}
+{% endblock %}

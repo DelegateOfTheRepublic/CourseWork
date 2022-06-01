@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Поставляемый товар</title>
+{% endblock %}
+
+{% block content %}
+    {% for field in supply_good.get_model_fields %}
+        {% if field.name != 'id' and field.name != 'supllier' %}
+            <p>{{supply_good|get_verb_name:field}}: {{supply_good|get_attribute:field}}</p>
+        {% elif field.name == 'supllier' %}
+            <label for="">{{supply_good|get_verb_name:field}}: </label>
+            <a href="{% url 'supplierDetail' supply_good.supllier.id %}">{{supply_good|get_attribute:field}}</a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

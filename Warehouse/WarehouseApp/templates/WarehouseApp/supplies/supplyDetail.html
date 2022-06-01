@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>{{supply}}</title>
+{% endblock %}
+
+{% block content %}
+    <div style="display:flex; justify-content: space-between; width: 80%; margin: auto;">
+        <div>
+            {% for field in supply.get_model_fields %}
+                {% if field.name != 'id' %}
+                    <p>{{supply|get_verb_name:field}}: {{supply|get_attribute:field}}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: space-around;">
+            {% for supply_string in supply.get_supply_string %}
+                <a href="{% url 'supplyGoodDetail' supply.supplier.id supply_string.good.id %}">{{supply_string.good}}</a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

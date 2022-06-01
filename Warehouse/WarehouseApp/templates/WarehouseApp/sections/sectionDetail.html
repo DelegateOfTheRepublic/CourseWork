@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Товра из выбранной секции</title>
+{% endblock %}
+
+{% block content %}
+    {% if goods %}
+        {% for good in goods%}
+            <a href="{% url 'goodDetail' good.place.section.id good.id %}">{{good}}</a>
+        {% endfor %}
+    {% else %}
+        <h3>Товаров в секции нет</h3>
+    {% endif %}
+{% endblock %}
