@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "WarehouseApp/suppliers/supplierDetail.html" %}
 
 {% block title %}
     <title>Поставляемый товар</title>
 {% endblock %}
 
-{% block content %}
+{% block supGoodDetail %}
     {% for field in supply_good.get_model_fields %}
         {% if field.name != 'id' and field.name != 'supllier' %}
             <p>{{supply_good|get_verb_name:field}}: {{supply_good|get_attribute:field}}</p>

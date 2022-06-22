@@ -2,9 +2,31 @@
 
 {% block content %}
     {% if sections %}
-        {% for section in sections %}
-            <a href="{% url 'sectionDetail' section.id %}">{{section.name}}</a>
-        {% endfor %}
+        {% load static %}
+        <div class="flex flex-wrap gap-3 p-10">
+            {% for section in sections %}
+                <div class="bg-blue-500 w-52 h-64 rounded-lg overflow-auto">
+                    <div class="flex w-44 m-auto justify-between bg-indigo-400 rounded-lg pl-2 mt-1">
+                        <p class="w-fit overflow-hidden whitespace-nowrap">
+                            {{section.name}}
+                        </p>
+                        <a href="{% url 'sectionDetail' section.id %}" class="bg-fuchsia-400 pl-5 pr-1 h-fit rounded-r-lg" style="clip-path: polygon(41% 0, 100% 0, 100% 100%, 0% 100%)">More</a>
+                    </div>
+                    <div class="flex flex-col gap-y-2 mt-2">
+                        {% for good in section.get_goods %}
+                            <div class="flex w-48 m-auto border-2 rounded-lg h-fit">
+                                <img class="w-10 h-10" src="{{good.icon.url}}" title='{{good.group}}'>
+                                <div class="flex flex-nowrap ml-1 w-24">
+                                    <p class="h-fit overflow-hidden m-auto text-ellipsis whitespace-nowrap" style="margin-left: 0px; margin-right: 0px;" title={{good}}>{{good}}</p>
+                                    <p class="h-fit m-auto ml-2" style="margin-left: 0px; margin-right: 0px;">{{good.amount}}</p>
+                                    <small class="h-fit m-auto ml-1" style="margin-right: 0px;">{{good.unit}}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>  
+            {% endfor %}
+        </div>
     {% else %}
         <h3>Секций в базе нет</h3>
     {% endif %}

@@ -5,13 +5,111 @@
 {% endblock %}
 
 {% block content %}
-
     {% if suppliers %}
+      {% load static %}
+      <form>
+        <div class="m-auto flex w-9/12 flex-wrap justify-between gap-y-8 p-3">
+          <div class="flex w-fit flex-col gap-y-2">
+            <div class="color_b4 flex flex-col h-fit w-fit rounded-lg border-2 pl-1 pr-1">
+              <div class="flex">
+                <p>Упорядочить по:</p>
+                <select class="ml-1 outline-none" name="order" id="sort_key">
+                    <option selected hidden disabled value="">Sort key</option>
+                    <option value="company_name">Имени компании</option>
+                </select>
+              </div>
+              <div>
+                <label for="asc">По возрастанию</label>
+                <input type="radio" name="order" id="asc" value=" ">
+              </div>
+              <div>
+                <label for="desc">По убыванию</label>
+                <input type="radio" name="order" id="desc" value="-">
+              </div>
+            </div>
+        
+            <div class="color_b4 element flex flex-col gap-y-1 overflow-auto rounded-lg border-2 pl-1 pr-1" style="max-height: 20rem;">
+              <fieldset class="border-2 color_c2 rounded-lg p-2 mb-1">
+                <legend>По пост.-м товарам</legend>
+                <div class="flex h-fit w-24 justify-between">
+                  <p>Цена:</p>
+                  <input class="w-12 outline-none ml-2" type="text" name="price" placeholder="От" />
+                  <input class="w-12 outline-none ml-2" type="text" name="price" placeholder="До" />
+                </div>
+          
+                <div class="flex h-fit">
+                  <p>Товар:</p>
+                  <select class="outline-none" name="name" id="supplier">
+                    <option selected hidden disabled value="">выберите</option>
+                    {% for supGood in supGoods %}
+                      <option value='{{supGood}}'>{{supGood}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+          
+                <div class="flex h-fit">
+                  <p>Товарная группа:</p>
+                  <select class="ml-1 outline-none" name="group" id="">
+                    <option selected hidden disabled value="">выберите</option>
+                    {% for goodGroup in goodGroups %}
+                      <option value={{goodGroup.id}}>{{goodGroup}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </fieldset>
+              <hr class="border-2 border-dashed color_b4 mb-1"/>
+            </div>
+            <input type="submit" class="rounded-lg border-2 color_b4 w-fit pl-1 pr-1 m-auto" style="margin-top: 0px; margin-bottom: 0px;" value="Применить"/>
+          </div>
+        
+          <div class="flex w-7/12 flex-col gap-2">
+            <div class="color_b4 flex w-1/3 rounded-lg border-2 pl-2 pr-2">
+              <img class="m-auto ml-0 mr-0 h-4 w-4" src="{% static 'WarehouseApp/search.png' %}" alt="" />
+              <input class="ml-1 w-3/4 outline-none" type="text" id="search" placeholder="search" onkeypress="find(event)"/>
+              <img class="m-auto mr-1 h-4 w-4" style="margin-left: 10px;" onclick="clearSearch(event)" src="{% static 'WarehouseApp/close.png' %}" alt=""/>
+            </div>
+        
+            <div id="itemsList" class="color_b4 element flex flex-wrap justify-between gap-y-2 overflow-auto rounded-lg border-2 p-1 pr-4 pl-2" style="max-height: 20rem;">
+              {% for supplier in suppliers %}
+                <div class="bgcolor_a4 color_c4 flex h-fit w-48 justify-between rounded-xl pl-1">
+                  <p class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap">{{supplier}}</p>
+                  <a class="bgcolor_c4 clip ml-2 rounded-r-lg pl-5 pr-1 popup-link" href="#supplier{{supplier.id}}">More</a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
         {% for supplier in suppliers %}
-            <a href="{% url 'supplierDetail' supplier.id %}">{{supplier}}</a>
+          <div id="supplier{{supplier.id}}" class="popup element">
+            <div class="popup__body">
+                <div class="popup__content">
+                    <a href="#target" class="popup__close close-popup">X</a>
+                    {% for field in supplier.get_model_fields %}
+                      {% if field.name != 'id' %}
+                        <p>{{supplier|get_verb_name:field}}: {{supplier|get_attribute:field}}</p>
+                      {% endif %}
+                    {% endfor %}
+                    {% if supplier.get_supplier_goods %}
+                      <fieldset class="border-2 color_b4 p-1 w-fit m-auto rounded-lg">
+                        <legend>Поставляемые товары</legend>
+                        {% for sup_good in supplier.get_supplier_goods %}
+                          <p>&#10026;{{sup_good}}</p>
+                        {% endfor %}
+                      </fieldset>
+                    {% else %}
+                      <fieldset class="border-2 color_b4 p-1 w-fit m-auto rounded-lg" style="margin-top: 0.5rem;">
+                        <legend>Товары не найдены</legend>
+                        <img style="width: 96px; height:72px;" class="m-auto" src="{% static 'WarehouseApp/oops.gif' %}" alt="">
+                      </fieldset>
+                    {% endif %}
+                </div>
+            </div>
+          </div> 
         {% endfor %}
+      </form>
     {% else %}
-        <p>Такого поставщика в базе нет</p>
+        {% include 'WarehouseApp/zxc.html' %}
     {% endif %}
 
 {% endblock %}

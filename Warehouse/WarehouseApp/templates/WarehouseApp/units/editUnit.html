@@ -1,0 +1,6 @@
+{% extends  "base.html" %}
+
+{% block content %}
+    <label for="{{unit.id}}">Единица измерения: </label>
+    <input type="text" name="name" id="{{unit.id}}" required maxlength="25">
+{% endblock %}

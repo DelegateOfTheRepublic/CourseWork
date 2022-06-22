@@ -1,18 +1,27 @@
-{% extends "base.html" %}
+{% extends "WarehouseApp/sections/sectionDetail.html" %}
 
 {% block title %}
     <title>{{good}}</title>
 {% endblock %}
 
-{% block content %}
+{% block goodDetail %}
 
+    <!--<p>{{good.name}}</p>
+    <a href="{% url 'supplierDetail' good.supplier.id %}">{{good.supplier}}</a>
+    <img src="{{good.icon.url}}" alt="">
     <div>
-        <p>{{good.name}}</p>
-        <a href="{% url 'supplierDetail' good.supplier.id %}">{{good.supplier}}</a>
-        <img src="{{good.icon.url}}" alt="">
         {% for key in good_specs.keys %}
-            <p>{{good_specs|get_item:key}}</p>
+        <p>{{good_specs|get_item:key}}</p>
         {% endfor %}
-    </div>
+    </div>-->
+
+    <div id="popup" class="popup element">
+        <div class="popup__body">
+            <div class="popup__content">
+                <a href="#target" class="popup__close close-popup">X</a>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reprehenderit beatae saepe error quasi, perferendis doloremque voluptates, fuga facere laboriosam, adipisci odio magni accusamus esse? Eveniet id debitis iure ad aliquam.0</p>
+            </div>
+        </div>
+    </div> 
 
 {% endblock %}

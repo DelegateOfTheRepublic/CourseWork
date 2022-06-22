@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "WarehouseApp/receipts/receipts.html" %}
 
 {% block title %}
     <title>Накладная</title>
 {% endblock %}
 
-{% block content %}
+{% block receiptDetail %}
     {% for field in receipt.get_model_fields %}
         {% if field.name != 'id' %}
             {% if field.name == 'supplier' %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Добавление единицы измерения</title>
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'addUnit' %}" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <p>{{form.errors}}</p>
+        <button>Добавить</button>
+    </form>
+{% endblock %}

@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "WarehouseApp/expenditures/expenditures.html" %}
 
 {% block title %}
     <title>Доверенность</title>
 {% endblock %}
 
-{% block content %}
+{% block expenditureDetail %}
     {% for field in expenditure.get_model_fields %}
         {% if field.name != 'id' %}
             {% if field.name == 'supplier' %}

@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "npx tailwindcss -i C:/JS/WEBJS/CourseWork/Warehouse/WarehouseApp/static/WarehouseApp/input.css -o C:/JS/WEBJS/CourseWork/Warehouse/WarehouseApp/static/WarehouseApp/output.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
+    "postcss-cli": "^9.1.0",
+    "tailwindcss": "^3.1.2"
+  }
+}

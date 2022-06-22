@@ -5,18 +5,89 @@
 {% endblock %}
 
 {% block content %}
-    <div style="display:flex; justify-content: space-between; width: 80%; margin: auto;">
-        <div>
+    <div class="flex flex-nowrap justify-between p-10 pl-10 pr-10">
+        <div class="flex flex-col gap-y-2">
+            <div class="color_b4 flex h-fit w-fit rounded-lg border-2 pl-1 pr-1">
+                <p>Сортировать по:</p>
+                <select class="ml-1 outline-none" name="sort_key" id="sort_key">
+                    <option selected hidden disabled value="">Sort key</option>
+                    <option value="Price">Price</option>
+                </select>
+            </div>
+
+            <div class="color_b4 element flex flex-col gap-y-1 overflow-auto rounded-lg border-2 pl-1 pr-1" style="max-height: 20rem;">
+                <div class="flex h-fit w-3/4 justify-between">
+                    <p>Цена:</p>
+                    <input class="w-12 outline-none" type="text" placeholder="От" />
+                    <input class="w-12 outline-none" type="text" placeholder="До" />
+                </div>
+
+                <div class="flex h-fit">
+                    <p>Поставщик:</p>
+                    <select class="outline-none" name="supplier" id="supplier">
+                    <option selected hidden disabled value="">Suppliers</option>
+                    <option value="A">A</option>
+                    </select>
+                </div>
+
+                <div class="flex h-fit">
+                    <p>Категория:</p>
+                    <select class="outline-none ml-1" name="category" id="">
+                    <option selected hidden disabled value="">Category</option>
+                    <option value="A">A</option>
+                    </select>
+                </div>
+
+                <div class="flex h-fit">
+                    <p>Подкатегория:</p>
+                    <select class="outline-none ml-1" name="subcategory" id="">
+                    <option selected hidden disabled value="">Subcategory</option>
+                    <option value="A">A</option>
+                    </select>
+                </div>
+
+                <div class="flex h-fit">
+                    <p>Товарная группа:</p>
+                    <select class="outline-none ml-1" name="goodgroup" id="">
+                    <option selected hidden disabled value="">Good group</option>
+                    <option value="A">A</option>
+                    </select>
+                </div>
+
+                <hr class="border-2 border-dashed color_b4 mb-1"/>
+            </div>
+        </div>
+
+        <div class="flex flex-col w-7/12 gap-2 pl-1 pr-1">
+            <div class="color_b4 flex w-1/3 rounded-lg border-2 pl-2 pr-2 h-fit">
+                <img class="m-auto ml-0 mr-0 h-4 w-4" src="https://cdn-icons-png.flaticon.com/512/64/64673.png" alt="" />
+                <input class="ml-1 w-3/4 outline-none" type="text" placeholder="search" />
+            </div>
+
+            <div class="color_b4 element flex flex-wrap justify-between gap-y-2 overflow-auto rounded-lg border-2 p-1 pr-4 pl-2" style="max-height: 20rem;">
+                {% for supply_good in supplier.get_supplier_goods %}
+                    <div class="bgcolor_a4 color_c4 flex h-fit w-48 justify-between rounded-xl pl-1">
+                        <p class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap">{{supply_good}}</p>
+                        <a class="bgcolor_c4 clip ml-2 rounded-r-lg pl-5 pr-1" href="{% url 'supplyGoodDetail' supplier.id supply_good.id %}">More</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="color_b4 element flex h-80 rounded-lg border-2 pl-2">
+                {% block supGoodDetail %}
+                    
+                {% endblock %}
+            </div>
+        </div>
+    </div>  
+{% endblock %}
+
+    <!--<div style="display:flex; justify-content: space-between; width: 80%; margin: auto;">-->
+        <!--<div>
             {% for field in supplier.get_model_fields %}
                 {% if field.name != 'id' %}
                     <p>{{supplier|get_verb_name:field}}: {{supplier|get_attribute:field}}</p>
                 {% endif %}
             {% endfor %}
-        </div>
-        <div style="display: flex; flex-direction: column; justify-content: space-around;">
-            {% for supply_good in supplier.get_supplier_goods %}
-                <a href="{% url 'supplyGoodDetail' supplier.id supply_good.id %}">{{supply_good}}</a>
-            {% endfor %}
-        </div>
-    </div>
-{% endblock %}
+        </div>-->
+    <!--</div>-->

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Перемещения товаров</title>
+{% endblock %}
+
+{% block content %}
+    {% if goodMovings %}
+        {% for goodMoving in goodMovings %}
+            <div>
+                {% for field in goodMoving.get_model_fields %}
+                    {% if field.name != 'id'%}
+                        {% if field.name == 'good_moving' %}
+                            <div>
+                                <label for="">Перемещаемый товар: </label>
+                                <a href="{% url 'goodDetail' goodMoving.good_moving.place.section.id goodMoving.good_moving.id %}">{{goodMoving.good_moving}}</a>
+                            </div>
+                        {% elif field.name ==  'emp' %}
+                            <div>
+                                <label for="">Сотрудник: </label>
+                                <a href="{% url 'empDetail' goodMoving.emp.id %}">{{goodMoving.emp}}</a>
+                            </div>
+                        {% else %}
+                            <p>{{goodMoving|get_verb_name:field}}: {{goodMoving|get_attribute:field}}</p>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

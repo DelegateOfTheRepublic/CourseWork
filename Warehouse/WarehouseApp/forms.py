@@ -73,7 +73,7 @@ class GoodsForm(forms.Form):
     name = forms.CharField(label='Наименование товара', max_length=125)
     price = forms.DecimalField(label='Цена товара', max_digits=12, decimal_places=4)
     supplier = forms.ModelChoiceField(queryset=Supplier.objects.all(), empty_label='Поставщик')
-    unit = forms.ModelChoiceField(queryse=Unit.objects.all(), empty_label='Единица измерения')
+    unit = forms.ModelChoiceField(queryset=Unit.objects.all(), empty_label='Единица измерения')
     volume = forms.DecimalField(label='Объем товара', max_digits=9, decimal_places=4)
     place = forms.ModelChoiceField(queryset=Cell.objects.all(), empty_label='Место на складе')
     icon = forms.ImageField(label='Иконка товара')
@@ -110,7 +110,6 @@ class ExpenditureForm(forms.Form):
 class LoadingForm(forms.Form):
     good = forms.ModelChoiceField(queryset=Goods.objects.all(), empty_label='Товар для отгрузки')
     amount = forms.IntegerField(label='Отгружаемое количество')
-    date = forms.DateField(label='Дата отгрузки', auto_now_add=True)
 
 class ReportForm(forms.Form):
     starting_good_balance = forms.IntegerField(label='Начальный остаток товара')

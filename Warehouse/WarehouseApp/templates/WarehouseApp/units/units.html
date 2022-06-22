@@ -6,12 +6,15 @@
 
 {% block content %}
 
-    {% if units %}
-        {% for unit in units %}
-            <p>{{unit}}</p>
-        {% endfor %}
-    {% else %}
-        <p>Такой единицы измерения в базе нет</p>
-    {% endif %}
+{% if units %}
+{% for unit in units %}
+    <div style="display: flex; width: fit-content;">
+        <p>{{unit}}</p>
+        <a href="{% url 'editUnit' unit.id %}" style="margin: auto;"><input type="button" name="to_remove" id="{{unit.id}}" value="Изм"></a>
+    </div>
+{% endfor %}
+{% else %}
+<p>Такой единицы измерения в базе нет</p>
+{% endif %}
 
 {% endblock %}

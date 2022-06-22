@@ -3,13 +3,134 @@
 {% block title %}
     <title>Секция</title>
 {% endblock %}
-
+  
 {% block content %}
-    {% if goods %}
-        {% for good in goods%}
-            <a href="{% url 'goodDetail' good.place.section.id good.id %}">{{good}}</a>
+  {% if goods %}
+    {% load static %}
+    <form action="{% url 'sectionDetail' section_id %}" method="get">
+        <div id="#target" class="flex flex-nowrap justify-between p-10">
+            <div class="flex flex-col gap-y-2">
+                <div class="color_b4 flex flex-col h-fit w-fit rounded-lg border-2 pl-1 pr-1">
+                    <div class="flex">
+                        <p>Упорядочить по:</p>
+                        <select class="ml-1 outline-none" name="order" id="sort_key">
+                            <option selected hidden disabled value="">Sort key</option>
+                            <option value="price">Цена</option>
+                            <option value="name">Алфавит</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="asc">По возрастанию</label>
+                        <input type="radio" name="order" id="asc" value=" ">
+                    </div>
+                    <div>
+                        <label for="desc">По убыванию</label>
+                        <input type="radio" name="order" id="desc" value="-">
+                    </div>
+                </div>
+    
+                <div class="color_b4 element flex flex-col gap-y-1 overflow-auto rounded-lg border-2 pl-1 pr-1" style="max-height: 20rem;">
+                    <div class="flex h-fit w-3/4 justify-between">
+                        <p>Цена:</p>
+                        <input class="w-12 outline-none" type="text" placeholder="От" name="price" />
+                        <input class="w-12 outline-none" type="text" placeholder="До" name="price" />
+                    </div>
+    
+                    <div class="flex h-fit">
+                        <p>Поставщик:</p>
+                        <select class="outline-none ml-1" name="supplier">
+                        <option selected hidden disabled value="">выберите</option>
+                        {% for supplier in suppliers %}
+                            <option value={{supplier|get_id}}>{{supplier}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="flex h-fit">
+                        <p>Категория:</p>
+                        <select class="outline-none ml-1" name="category">
+                        <option selected hidden disabled value="">выберите</option>
+                        {% for category in categories %}
+                            <option value={{category|get_id}}>{{category}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="flex h-fit">
+                        <p>Подкатегория:</p>
+                        <select class="outline-none ml-1" name="subcategory">
+                        <option selected hidden disabled value="">выберите</option>
+                        {% for subcategory in subcategories %}
+                            <option value={{subcategory|get_id}}>{{subcategory}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="flex h-fit">
+                        <p>Товарная группа:</p>
+                        <select class="outline-none ml-1" name="group">
+                        <option selected hidden disabled value="">выберите</option>
+                        {% for goodGroup in goodGroups %}
+                            <option value={{goodGroup|get_id}}>{{goodGroup}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+    
+                    <hr class="border-2 border-dashed color_b4 mb-1"/>
+                </div>
+    
+                <input type="submit" class="rounded-lg border-2 color_b4 w-fit pl-1 pr-1 m-auto" style="margin-top: 0px; margin-bottom: 0px;" value="Применить"/>
+            </div>
+    
+            <div class="flex flex-col w-7/12 gap-2">
+                <div class="color_b4 flex w-1/3 rounded-lg border-2 pl-2 pr-2 h-fit">
+                    <img class="m-auto ml-0 mr-0 h-4 w-4" style="margin-right: 2px;" src="{% static 'WarehouseApp/search.png' %}" alt="" />
+                    <input class="ml-1 w-3/4 outline-none" id="search" type="text" placeholder="search" onkeypress="find(event)"/>
+                    <img class="m-auto mr-1 h-4 w-4" style="margin-left: 10px;" onclick="clearSearch(event)" src="{% static 'WarehouseApp/close.png' %}" alt=""/>
+                </div>
+    
+                <div class="color_b4 element flex flex-wrap justify-between gap-y-2 overflow-auto rounded-lg border-2 p-1 pr-4 pl-2" id="itemsList" style="max-height: 20rem;">
+                    {% block goodsView %}
+                        {% for good in goods %}
+                            <div class="bgcolor_a4 color_c4 border-2 flex h-fit w-48 justify-between rounded-xl pl-1">
+                                <img class="h-8 w-8" src="{% static 'WarehouseApp/ram.png' %}" alt="" title="RAM" />
+                                <p class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap">{{good}}</p>
+                                <a class="bgcolor_c4 clip ml-2 rounded-r-lg pl-5 pr-1 popup-link" href="#good{{good.id}}">More</a>
+                            </div>
+                        {% endfor %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% for good in goods %}
+            <div id="good{{good.id}}" class="popup element">
+                <div class="popup__body">
+                    <div class="popup__content">
+                        <a href="#target" class="popup__close close-popup">X</a>
+                        <div class="flex h-fit w-fit m-auto">
+                            <img class="w-10 h-10" src="{{good.icon.url}}" alt="">
+                            <p class="m-auto ml-1 mr-0">{{good}}</p>
+                        </div>
+                        <p>Количество: {{good.amount}} {{good.unit}}</p>
+                        <p>Объем: {{good.volume}}</p>
+                        <p>Поставщик: {{good.supplier}}</p>
+                        <p>Место в секции: {{good.place.id}}</p>
+                        <p>Категория: {{good.category}}</p>
+                        <p>Подгатегория: {{good.subcategory}}</p>
+                        <p>Товарная группа: {{good.group}}</p>
+                        <fieldset class="border-2 color_b4 bgcolor_a4">
+                            <legend>Характеристики</legend>
+                            <div class="flex flex-col gap-1 w-fit m-auto">
+                                {% for spec in specs|get_item:good %}
+                                    <p>{{spec}}: {{specs|get_item:good|get_item:spec}}</p>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>  
         {% endfor %}
-    {% else %}
-        <h3>Товаров в секции нет</h3>
-    {% endif %}
+    </form>
+  {% endif %}
 {% endblock %}

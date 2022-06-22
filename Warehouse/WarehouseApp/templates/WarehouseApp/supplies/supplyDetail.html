@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "WarehouseApp/supplies/supplies.html" %}
 
 {% block title %}
     <title>{{supply}}</title>
 {% endblock %}
 
-{% block content %}
+{% block supplyDetail %}
     <div style="display:flex; justify-content: space-between; width: 80%; margin: auto;">
         <div>
             {% for field in supply.get_model_fields %}

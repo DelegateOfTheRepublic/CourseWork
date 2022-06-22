@@ -5,10 +5,42 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block title %}<title>Warehouse</title> {% endblock %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'WarehouseApp/style.css' %}">
+    <link rel="stylesheet" href="{% static 'WarehouseApp/suppliers_style.css' %}">
+    <link rel="stylesheet" href="{% static 'WarehouseApp/map_style.css' %}">
 </head>
-<body>
+<body class="lock-padding overflow-auto element">
+    <div class="relative m-auto flex w-fit justify-center" id="menu">
+        <div class="absolute grid grid-cols-2 gap-1 p-1 h-fit rounded-lg border-2 bgcolor_b5 color_c4" style="width: 220px;" id="left">
+          <a class="w-fit" href="{% url 'emps' %}">Сотрудники</a>
+          <a class="w-fit" href="{% url 'suppliers' %}">Поставщики</a>
+          <a class="w-fit" href="{% url 'warehouseMap' %}">Карта склада</a>
+          <a class="w-fit" href="{% url 'expenditures' %}">Накладные</a>
+          <a class="w-fit" href="{% url 'receipts' %}">Доверенности</a>
+        </div>
+        <div id="center" class="h-fit w-fit rounded-full border-2 p-3 bgcolor_a4 color_c4">
+          <p onclick="showMenu(event)">Menu</p>
+        </div>
+        <div class="absolute grid grid-cols-2 gap-1 p-1 h-fit rounded-lg border-2 bgcolor_b5 color_c4" style="width: 250px;" id="right">
+          <a class="w-fit" href="{% url 'reports' %}">Отчеты</a>
+          <a class="w-fit" href="{% url 'loadings' %}">Отгрузки</a>
+          <a class="w-fit" href="{% url 'supplies' %}">Поставки</a>
+          <select class="outline-none bgcolor_b5" onchange="location = this.value">
+            <option selected hidden disabled value="">Составить</option>
+            <option value="{% url 'reportForm' %}">Отчет</option>
+            <option value="{% url 'supplyForm' %}">Поставку</option>
+            <option value="{% url 'loadingForm' %}">Отгрузку</option>
+          </select>
+        </div>
+    </div>
     {% block content %}
 
     {% endblock %}
+    <script src="{% static 'WarehouseApp/popups.js' %}"></script>
+    <script src="{% static 'WarehouseApp/search.js' %}"></script>
+    <script src="{% static 'WarehouseApp/menu.js' %}"></script>
+    <script src="{% static 'WarehouseApp/newParagraph.js' %}"></script>
+    <script src="{% static 'WarehouseApp/addGood.js' %}"></script>
 </body>
 </html>

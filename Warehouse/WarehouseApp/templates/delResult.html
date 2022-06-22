@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Результат удаления записи</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if errorRecord %}
+        <div class="errorMessage">
+            <p>Не удалось удалить запись: {{errorRecord}}</p>
+        </div>
+    {% else %}
+        <div class="successMessage">
+            <p>Запись(и) удалена</p>
+        </div>
+    {% endif %}
+
+{% endblock %}
