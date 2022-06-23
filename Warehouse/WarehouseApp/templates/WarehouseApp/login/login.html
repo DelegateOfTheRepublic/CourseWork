@@ -1,18 +1,36 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'WarehouseApp/style.css' %}">
+</head>
+<body>
+    <form action="{% url 'login' %}" method="post" class="absolute" style="margin-left: 35%;">
+        {% csrf_token %}
+        {% if error %}
+            <div class="w-fit m-auto">
+                <p>
+                    Некорректные логин и/или пароль
+                </p>
+            </div>
+        {% endif %}
 
-{% block title %}
-    <title>Вход</title>
-{% endblock %}
-
-{% block content %}
-    <div class="login">
-        <h2>Aaa</h2>
-        <h2>Bbb</h2>
-        <h2>Ccc</h2>
-        <h2>Ccc</h2>
-        <h2>Ccc</h2>
-        <h2>Ccc</h2>
-        <h2>Ccc</h2>
-        <h2>Ccc</h2>
-    </div>
-{% endblock %}
+        <div class="flex flex-col w-48 relative flex-wrap border-2 bgcolor_a2 color_b4 text_color_b3 rounded-lg m-auto" style="margin-top: 15%;">
+            <p class="m-auto">Авторизация</p>
+            <div class="flex ml-2">
+                <label for="login">Email:</label>
+                <input class="w-24 outline-none ml-1 bgcolor_c5 rounded-lg" required type="email" name="login" id="login">
+            </div>
+            <div class="flex ml-2 mt-2">
+                <label for="pass">Пароль:</label>
+                <input class="w-24 outline-none ml-1 bgcolor_c5 rounded-lg" required type="text" name="pass" id="pass">
+            </div>
+            <button class="border-2 bgcolor_c5 color_a4 rounded-lg w-fit pl-2 pr-2 mt-2 mb-1 m-auto">Войти</button>
+        </div>
+    </form>
+</body>
+</html>

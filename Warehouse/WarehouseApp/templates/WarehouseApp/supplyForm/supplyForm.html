@@ -31,7 +31,8 @@
                 <div id="itemsList" class="color_b4 element flex flex-wrap justify-between gap-y-2 overflow-auto m-auto rounded-lg border-2 p-1 pr-4 pl-2" style="max-height: 20rem; width: 80%;">
                     {% for supply_good in supply_goods %}
                         <div id="goodName" class="bgcolor_a4 color_c4 flex h-fit w-48 rounded-xl pl-1">
-                            <p id="{{supply_good.id}}" class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap" onclick="addGood(event)" title="Товар: {{supply_good}}, поставщик: {{supply_good.supplier}}">{{supply_good}}</p>
+                            <img class="w-10 h-10" src="{{supply_good.group.icon.url}}" alt="">
+                            <p id="{{supply_good.id}}" class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap m-auto text_color_c4" onclick="addGood(event)" title="Товар: {{supply_good}}, поставщик: {{supply_good.supplier}}">{{supply_good}}</p>
                         </div>
                     {% endfor %}
                 </div>

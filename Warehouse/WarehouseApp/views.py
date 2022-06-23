@@ -46,11 +46,21 @@ def get_id(model):
     return model.get_id()
 
 def login(request):
-    return render(request, "WarehouseApp/login/login.html")
+    sections = Section.objects.all()
+    userData = request.POST
+    if len(userData) == 0:
+        return render(request, "WarehouseApp/login/login.html", {'error':False})
+    else:
+        validUser = Emp.objects.filter(email = userData['login'], password = userData['pass']).exists()
+        if validUser:
+            request.session['userId'] = Emp.objects.get(email = userData['login'], password = userData['pass']).id
+            return render(request, "WarehouseApp/warehouseMap/map.html", {'sections':sections})
+        else:
+            return render(request, "WarehouseApp/login/login.html", {'error':True})
 
 def warehouseMap(request):
     sections = Section.objects.all()
-    goods = Goods.objects.all()
+    goods = Goods.objects.all().order_by('group')
     return render(request, "WarehouseApp/warehouseMap/map.html", {'sections':sections, 'goods':goods})
 
 def sectionDetail(request, section_id):
@@ -74,7 +84,7 @@ def sectionDetail(request, section_id):
         subcategories = Subcategory.objects.all()
         goodGroups = GoodGroup.objects.all()
         querySet = request.GET
-        resultQuery = queryFilter.applyFilter(querySet, Goods, Q(place__section__id = section_id))
+        resultQuery = queryFilter.applyFilter(querySet, Goods, Q(place__section__id = section_id)).order_by('group')
     except:
         raise Http404('Данной секции не существует')
     return render(request, 'WarehouseApp/sections/sectionDetail.html', {'goods':resultQuery, 'section_id':section_id, 
@@ -213,7 +223,7 @@ def reports(request):
                                                                  'receipts':receipts, 'loadings':loadings})
 
 def supplyForm(request):
-    supply_goods = SupGood.objects.all()
+    supply_goods = SupGood.objects.all().order_by('group')
 
     if request.method == 'POST':
         emp = 1
@@ -250,7 +260,7 @@ def supplyForm(request):
     return render(request, 'WarehouseApp/supplyForm/supplyForm.html', {'supply_goods':supply_goods})
 
 def loadingForm(request):
-    goods = Goods.objects.all()
+    goods = Goods.objects.all().order_by('group')
 
     if request.method == "POST":
 

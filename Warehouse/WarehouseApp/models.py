@@ -1,9 +1,12 @@
+from email.policy import default
 from genericpath import exists
 from time import timezone
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import *
 from django.db import models
 from django.db.models import *
+from django.db.models.signals import *
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -19,8 +22,12 @@ class SectionType(models.Model):
     def __str__(self):
         return self.name
 
+def good_path(goodGroup, filename):
+    return '{0}/{1}'.format(goodGroup.name, filename)
+
 class GoodGroup(models.Model):
     name = models.CharField('Наименование группы товара', max_length=125)
+    icon = models.ImageField(upload_to=good_path, max_length=500, default="C:\JS\WEBJS\CourseWork\Warehouse\itemsIcons\Компьютеры\Комплектующие для ПК\Видеокарты\supplier_2_Palit GeForce GT 730 Silent LP\\author_not_found.png")
 
     def get_id(self):
         return self.id
@@ -35,7 +42,7 @@ class Section(models.Model):
     total_volume = models.DecimalField('Общий объем', max_digits=9, decimal_places=4)
 
     def get_goods(self):
-        return Goods.objects.filter(place__section__id = self.id)
+        return Goods.objects.filter(place__section__id = self.id).order_by('group')
 
     def __str__(self):
         return self.name
@@ -182,12 +189,22 @@ class Goods(models.Model):
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, verbose_name='Единица измерения')
     volume = models.DecimalField('Объем товара', max_digits=9, decimal_places=4)
     place = models.ForeignKey(Cell, on_delete=models.SET_NULL, null=True, verbose_name='Место на складе')
-    icon = models.ImageField(upload_to=good_path, max_length=500)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, verbose_name='Категория')
     subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL, null=True, verbose_name='Подкатегория')
     group = models.ForeignKey(GoodGroup, on_delete=models.SET_NULL, null=True, verbose_name='Группа')
     specs = models.FileField(upload_to=good_path, validators=[FileExtensionValidator(allowed_extensions=["json"])], max_length=500)
     amount = models.IntegerField('Количество товара')
+
+    def save(self, *args, **kwargs):
+        super(Goods, self).save(*args, **kwargs)
+        current_free_volume = self.place.section.free_volume
+        total_volume = (self.amount * self.volume) / 100
+        if total_volume > current_free_volume:
+            raise ValueError('Недостаточно свободного объема({0}) в секции. Товар требует {1} наличия свободного объема'.format(current_free_volume, total_volume))
+        else:
+            chSection = Section.objects.get(id = self.place.section.id)
+            chSection.free_volume -= total_volume
+            chSection.save()
 
     def get_id(self):
         return self.id
@@ -231,7 +248,7 @@ class Receipts(models.Model):
     date = models.DateTimeField('Дата выдачи')
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Поставщик')
     receiver_company = models.CharField('Кампания получатель', max_length=125)
-    total_cost = models.DecimalField('Конечная цена', max_digits=9, decimal_places=5)
+    total_cost = models.DecimalField('Конечная цена', max_digits=12, decimal_places=5)
     rec_employee = models.ForeignKey(Emp, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Сотрудник')
 
     def get_receipt_strings(self):
@@ -252,17 +269,23 @@ class ReceiptString(models.Model):
     amount = models.IntegerField('Количество товара')
 
     def save(self, *args, **kwargs):
-        filter = Q(name = self.good.name) & Q(supplier_id = self.good.supplier.id)
-        if Goods.objects.filter(filter).exists():
-            exGood = Goods.objects.get(filter)
-            newRegisterItem = Register.objects.create(
-                good_id = exGood.id,
-                starting_amount = exGood.amount + self.amount,
-                receive_date = self.receipt.date,
-                receipt_id = self.receipt.id
-            )
-            exGood.amount += self.amount
-            exGood.save()
+        if self.id == None:
+            filter = Q(name = self.good.name) & Q(supplier_id = self.good.supplier.id)
+            if Goods.objects.filter(filter).exists():
+                exGood = Goods.objects.get(filter)
+                newRegisterItem = Register.objects.create(
+                    good_id = exGood.id,
+                    starting_amount = exGood.amount + self.amount,
+                    receive_date = self.receipt.date,
+                    receipt_id = self.receipt.id
+                )
+                exGood.amount += self.amount
+                exGood.save()
+
+            chReceipt = Receipts.objects.get(id = self.receipt.id)
+            chReceipt.total_cost += self.good.price * self.amount
+            chReceipt.save()
+
         super(ReceiptString, self).save(*args, **kwargs)
 
     def get_verbose_name(self, field_name):
@@ -278,7 +301,7 @@ class Expenditure(models.Model):
     date = models.DateTimeField('Дата получения')
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Поставщик')
     receiver_company = models.CharField('Кампания получатель', max_length=125)
-    total_cost = models.DecimalField('Конечная цена', max_digits=9, decimal_places=5)
+    total_cost = models.DecimalField('Конечная цена', max_digits=12, decimal_places=5)
     exp_employee = models.ForeignKey(Emp, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Сотрудник')
 
     def get_expenditure_strings(self):
@@ -297,6 +320,15 @@ class ExpenditureString(models.Model):
     expenditure = models.ForeignKey(Expenditure, on_delete=models.CASCADE, verbose_name='Номер доверенности')
     good = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Товар')
     amount = models.IntegerField('Количество товара')
+
+    def save(self, *args, **kwargs):
+
+        if self.id == None:
+            chExpenditure = Expenditure.objects.get(id = self.expenditure.id)
+            chExpenditure.total_cost += self.good.price * self.amount
+            chExpenditure.save()
+
+        super(ExpenditureString, self).save(*args, **kwargs)
 
     def get_verbose_name(self, field_name):
         return self._meta.get_field(field_name).verbose_name
@@ -330,6 +362,17 @@ class LoadingString(models.Model):
     good = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True)
     loading_amount = models.IntegerField('Отгружаемое количество товара')
     
+    def save(self, *args, **kwargs):
+        super(LoadingString, self).save(*args, **kwargs)
+
+        chSection = Section.objects.get(id = self.good.place.section.id)
+        vacantVolume = chSection.free_volume + (self.loading_amount * self.good.volume) / 100
+        if vacantVolume > chSection.total_volume:
+            raise ValueError('Недостаточно объема секции: максимальный объем секции {0} = {1}, потенциальный свободный объем = {2}'.format(chSection.name, chSection.total_volume, vacantVolume))
+        else:
+            chSection.free_volume = vacantVolume
+            chSection.save()
+
     def get_verbose_name(self, field_name):
         return self._meta.get_field(field_name).verbose_name
 
@@ -343,7 +386,7 @@ class Register(models.Model):
     good = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True, verbose_name='Товар')
     starting_amount = models.IntegerField('Начальное количество товара')
     receive_date = models.DateField('Дата поступления', null=True, blank=True)
-    receipt = models.ForeignKey(Receipts, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Накладная')
+    receipt = models.ForeignKey(Receipts, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Доверенность')
     expiration_date = models.DateField('Дата реализации', null=True, blank=True)
     loading = models.ForeignKey(Loading, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Отгрузка')
     loading_amount = models.IntegerField('Отгружаемое количество', null=True, blank=True)
@@ -379,7 +422,7 @@ class ReportString(models.Model):
     good = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True)
     report = models.ForeignKey(Report, on_delete=models.CASCADE, verbose_name='Номер отчета')
     starting_good_balance = models.IntegerField('Начальный остаток товара')
-    receipts = models.ForeignKey(Receipts, on_delete=models.SET_NULL, null=True, verbose_name='Накладная')
+    receipts = models.ForeignKey(Receipts, on_delete=models.SET_NULL, null=True, verbose_name='Доверенность')
     loading = models.ForeignKey(Loading, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Отгрузка')
     closing_good_balance = models.IntegerField('Конечный остаток товара')
 

@@ -93,8 +93,8 @@
                     {% block goodsView %}
                         {% for good in goods %}
                             <div class="bgcolor_a4 color_c4 border-2 flex h-fit w-48 justify-between rounded-xl pl-1">
-                                <img class="h-8 w-8" src="{% static 'WarehouseApp/ram.png' %}" alt="" title="RAM" />
-                                <p class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap">{{good}}</p>
+                                <img class="h-8 w-8" src="{{good.group.icon.url}}" alt="" title="RAM" />
+                                <p id="sectionGoodName" class="ml-2 overflow-hidden text-ellipsis whitespace-nowrap text_color_c4" title='{{good}}'>{{good}}</p>
                                 <a class="bgcolor_c4 clip ml-2 rounded-r-lg pl-5 pr-1 popup-link" href="#good{{good.id}}">More</a>
                             </div>
                         {% endfor %}
@@ -109,7 +109,7 @@
                     <div class="popup__content">
                         <a href="#target" class="popup__close close-popup">X</a>
                         <div class="flex h-fit w-fit m-auto">
-                            <img class="w-10 h-10" src="{{good.icon.url}}" alt="">
+                            <img class="w-10 h-10" src="{{good.group.icon.url}}" alt="">
                             <p class="m-auto ml-1 mr-0">{{good}}</p>
                         </div>
                         <p>Количество: {{good.amount}} {{good.unit}}</p>
@@ -119,11 +119,16 @@
                         <p>Категория: {{good.category}}</p>
                         <p>Подгатегория: {{good.subcategory}}</p>
                         <p>Товарная группа: {{good.group}}</p>
-                        <fieldset class="border-2 color_b4 bgcolor_a4">
+                        <fieldset class="border-2 color_b4 bgcolor_a4 text_color_c4 rounded-lg overflow-auto element" style="max-height: 35%;">
                             <legend>Характеристики</legend>
-                            <div class="flex flex-col gap-1 w-fit m-auto">
+                            <div class="flex flex-col gap-1 w-fit m-auto p-1">
                                 {% for spec in specs|get_item:good %}
-                                    <p>{{spec}}: {{specs|get_item:good|get_item:spec}}</p>
+                                    <fieldset class="border-2 color_c4 bgcolor_b4 rounded-lg p-1 w-fit">
+                                        <legend>{{spec}}</legend>
+                                        {% for sub_spec in specs|get_item:good|get_item:spec %}
+                                            <p>{{sub_spec}}: {{specs|get_item:good|get_item:spec|get_item:sub_spec}}</p>
+                                        {% endfor %}
+                                    </fieldset>
                                 {% endfor %}
                             </div>
                         </fieldset>
